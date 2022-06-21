@@ -1,6 +1,6 @@
-import yup from 'yup';
+const yup = require('yup');
 
-export let requisitionModel = yup.object({
+let descriptionModel = yup.object().shape({
     id : yup
         .string()
         .uuid()
@@ -20,7 +20,7 @@ export let requisitionModel = yup.object({
     diaPerdido : yup
         .date()
         .required(),
-    caracteristicasUnicas : yub
+    caracteristicasUnicas : yup
         .string(),
     createdOn : yup
         .date()
@@ -28,3 +28,5 @@ export let requisitionModel = yup.object({
             return new Date().now
             })
 })
+
+module.exports = {descriptionModel};

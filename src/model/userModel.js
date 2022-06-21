@@ -1,12 +1,11 @@
-//import yup from 'yup';
 const yup = require('yup');
 
-let userModel = yup.object({
+let userModel = yup.object().shape({
     id : yup
         .string()
         .uuid()
         .required(),
-    name : yup
+    nome : yup
         .string()
         .required(),
     email : yup
@@ -18,4 +17,4 @@ let userModel = yup.object({
         .required()
 })
 
-module.exports = {userModel};
+module.exports = userModel;

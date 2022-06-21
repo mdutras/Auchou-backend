@@ -1,6 +1,6 @@
-import * as yup from "yup";
+const yup = require('yup');
 
-export let animalModel = yub.object({
+let animalModel = yup.object().shape({
     raca : yup
         .string()
         .required(),
@@ -16,9 +16,11 @@ export let animalModel = yub.object({
     sexo : yup
         .number()
         .integer()
-        .positive
+        .positive()
         .required(),
     estágio : yup.
         string().
         required(),
 })
+
+module.exports = {animalModel};

@@ -1,13 +1,13 @@
-import yup from 'yup';
+const yup = require('yup');
 
-export let userModel = yup.object({
+let orgModel = yup.object().shape({
     id : yup
         .string()
         .uuid()
         .required(),
     name : yup
         .string()
-        .required,
+        .required(),
     email : yup
         .string()
         .email()
@@ -19,3 +19,5 @@ export let userModel = yup.object({
         .string()
         .required()
 })
+
+module.exports = {orgModel};
