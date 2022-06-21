@@ -64,7 +64,7 @@ class databaseController{
         });
     }
 
-    databaseValidation(database){
+    modelValidation(database, values){
         let db, err = null;
         switch(database){
             case 'cachorros':
@@ -88,27 +88,25 @@ class databaseController{
                 break;
             
             default:
+                console.log('default')
                 err = new Error("Banco de dados solicitado não encontrado.")
                 break;
         }
-        return [db, err]
+        try{
+            db.validateSync(values);
+        }catch(err){
+            console.log(err);
+            return err;
+        }
+        return err
     }
 
     addData(database, values){
-        let [db, err] = this.databaseValidation(database);
+        let err = this.modelValidation(database);
         if(err){
             return err;
         }else{
             let str = "";
-            try{
-                err = db.validateSync(values);
-                if(err){
-                    console.log(err);
-                    return err;
-                }
-            }catch(err){
-                return err;
-            }
             Object.keys(values).forEach((key, i)=>{
                 str += `"${values[key]}"`
                 if(i + 1 < Object.keys(values).length){
@@ -126,73 +124,72 @@ class databaseController{
         }
     }
 
-    readData(database, values){
-        let str = "";
-        Object.keys(values).forEach((key, i)=>{
-            str += `${key} = "${values[key]}"`
-            if(i + 1 < Object.keys(values).length){
-                str += " AND "
-            }
+    readData(database, values = {}){
+        let str = "", query;
+        if(Object.keys(values) == 0){
+            query = `SELECT * FROM ${database};`
+        }else{
+            Object.keys(values).forEach((key, i)=>{
+                str += `${key} = "${values[key]}"`
+                if(i + 1 < Object.keys(values).length){
+                    str += " AND "
+                }
+            })
+            query = `SELECT * FROM ${database} WHERE ${str};`;
+        }
+        
+        //console.log(query);
+        return new Promise((resolve, reject)=>{
+            this.db.each(query, (err, data) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            })
         })
-        let query = `SELECT * FROM ${database} WHERE ${str};`;
-        this.db.all(query, (err, data)=>{
+        
+    }
+
+    removeData(database, id){
+        let query = `DELETE FROM ${database} WHERE id = ${id})`;
+        this.db.run(query, (err)=>{
             if(err){
                 console.log(err);
                 return err;
             }
-            return data
         })
+        return null;
     }
 
-    removeData(database, id){
-        let db, err = this.databaseValidation(database);
-        if(err){
-            return err;
-        }else{
-            let query = `DELETE FROM ${database} WHERE id = ${id})`;
-            this.db.run(query, (err)=>{
-                if(err){
-                    console.log(err);
-                    return err;
-                }
-            })
-            return null;
-        }
-    }
-
-    //TODO: Ajeitar a questão da validação dos valores
     updateData(database, id, values){
-        let db, err = this.databaseValidation(database);
-        if(err){
-            return err;
-        }else{
-            try{
-                err = db.validateSync(values);
-                if(err){
-                    console.log(err);
-                    return err;
+        this.readData(database, { id : id }).then(
+            (row)=>{
+                for(let val in values){
+                    row[val] = values[val];
                 }
-            }catch(err){
-                return err;
-            }
-            str = "";
-            Object.keys(values).forEach((key, i)=>{
-                str += `${key} = ${values[key]}`
-                if(i + 1 < Object.keys(values).length){
-                    str += ", "
-                }
-            })
-            let query = `UPDATE FROM ${database} 
-                SET (${str})
-                WHERE id = ${id})`;
-            this.db.run(query, (err)=>{
-                if(err){
-                    console.log(err);
-                    return err;
-                }
-            })
-            return null;
-        }
+                let err = this.modelValidation(database, row)
+
+                let str = "";
+                Object.keys(values).forEach((key, i)=>{
+                    str += `${key} = "${values[key]}"`
+                    if(i + 1 < Object.keys(values).length){
+                        str += ", "
+                    }
+                })
+                let query = `UPDATE ${database} 
+                    SET ${str}
+                    WHERE id = "${id}"`;
+                this.db.run(query, (err)=>{
+                    if(err){
+                        console.log(err);
+                        return err;
+                    }
+                })
+            },
+            (err)=>console.log(`Erro : ${err}`)
+        )
     }
 }
 

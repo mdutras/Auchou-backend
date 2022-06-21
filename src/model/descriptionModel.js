@@ -29,4 +29,4 @@ let descriptionModel = yup.object().shape({
             })
 })
 
-module.exports = {descriptionModel};
+module.exports = descriptionModel;

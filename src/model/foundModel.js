@@ -24,4 +24,4 @@ let descriptionModel = yup.object().shape({
         .string()
 })
 
-module.exports = {descriptionModel};
+module.exports = descriptionModel;

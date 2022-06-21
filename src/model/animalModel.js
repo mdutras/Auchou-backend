@@ -23,4 +23,4 @@ let animalModel = yup.object().shape({
         required(),
 })
 
-module.exports = {animalModel};
+module.exports = animalModel;

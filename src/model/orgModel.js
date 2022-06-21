@@ -20,4 +20,4 @@ let orgModel = yup.object().shape({
         .required()
 })
 
-module.exports = {orgModel};
+module.exports = orgModel;
