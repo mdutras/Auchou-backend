@@ -3,9 +3,8 @@ const yup = require('yup');
 let orgModel = yup.object().shape({
     id : yup
         .string()
-        .uuid()
         .required(),
-    name : yup
+    nome : yup
         .string()
         .required(),
     email : yup

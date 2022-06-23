@@ -3,7 +3,6 @@ const yup = require('yup');
 let descriptionModel = yup.object().shape({
     id : yup
         .string()
-        .uuid()
         .required(),
     idAnimal : yup
         .string()
@@ -17,16 +16,17 @@ let descriptionModel = yup.object().shape({
         .string()
         .matches(/\d\d:\d\d/g)
         .required(),
-    diaPerdido : yup
+    dataPerdido : yup
         .date()
         .required(),
     caracteristicasUnicas : yup
         .string(),
-    createdOn : yup
+    criadoEm : yup
         .date()
         .default(() => {
-            return new Date().now
-            })
+            let date = new Date().now;
+            return `${date.getDay()}/${date.getMonth()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        })
 })
 
 module.exports = descriptionModel;

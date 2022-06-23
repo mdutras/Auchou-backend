@@ -3,7 +3,6 @@ const yup = require('yup');
 let descriptionModel = yup.object().shape({
     id : yup
         .string()
-        .uuid()
         .required(),
     idAnimal : yup
         .string()
@@ -17,7 +16,7 @@ let descriptionModel = yup.object().shape({
         .string()
         .matches(/\d\d:\d\d/g)
         .required(),
-    diaEncontrado : yup
+    dataEncontrado : yup
         .date()
         .required(),
     caracteristicasUnicas : yup

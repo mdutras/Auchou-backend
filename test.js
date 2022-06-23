@@ -1,16 +1,24 @@
-const express = require('express');
-const dbController = require('./src/database/db');
+// const express = require('express');
+// const dbController = require('./src/database/db');
+// const crypto = require('crypto');
 
-const app = express();
+// const db = new dbController();
 
-app.get('/', (req, res)=>{
-    console.log(req.query);
-    if(Object.keys(req.query).length == 0){
-        console.log("Está vazio :D");
-    }
-    res
-        .type('text/plain');
-    res.send('Hello World!');
-})
+// const app = express();
 
-app.listen(3300, ()=>{console.log("Servidor aberto na porta 3300...")});
+// db.readFullAnimalData('animaisEncontrados').then(
+//     (data)=>console.log(data),
+//     (err)=>console.log(err)
+// )
+
+let obj = {
+    nome : "Genivaldo",
+    idade : 22
+}
+
+let {nome, idade} = obj;
+
+let obj1 = {nome};
+let obj2 = {idade};
+
+console.log(obj1, obj2)

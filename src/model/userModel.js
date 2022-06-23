@@ -3,9 +3,11 @@ const yup = require('yup');
 let userModel = yup.object().shape({
     id : yup
         .string()
-        .uuid()
         .required(),
     nome : yup
+        .string()
+        .required(),
+    senha : yup
         .string()
         .required(),
     email : yup

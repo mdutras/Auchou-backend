@@ -1,6 +1,9 @@
 const yup = require('yup');
 
 let animalModel = yup.object().shape({
+    id : yup
+        .string()
+        .required(),
     raca : yup
         .string()
         .required(),
@@ -14,11 +17,9 @@ let animalModel = yup.object().shape({
         .string()
         .required(),
     sexo : yup
-        .number()
-        .integer()
-        .positive()
+        .string()
         .required(),
-    estágio : yup.
+    estagio : yup.
         string().
         required(),
 })

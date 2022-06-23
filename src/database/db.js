@@ -20,39 +20,40 @@ class databaseController{
     createTables(){
         let querys = [
             `CREATE TABLE IF NOT EXISTS cachorros (
-                id TEXT PRIMARY KEY,
+                id VARCHAR(50) PRIMARY KEY NOT NULL,
                 raca TEXT NOT NULL,
                 porte CHAR(25) NOT NULL,
-                cor_pelo CHAR(25) NOT NULL,
-                tamanho_pelo CHAR(25) NOT NULL, 
+                corPelo CHAR(25) NOT NULL,
+                tamanhoPelo CHAR(25) NOT NULL, 
                 sexo CHAR(2) NOT NULL,
-                estágio CHAR(25) NOT NULL)`,
+                estagio CHAR(25) NOT NULL)`,
             `CREATE TABLE IF NOT EXISTS usuarios (
-                id STRING PRIMARY KEY,
+                id VARCHAR(50) PRIMARY KEY NOT NULL,
                 nome TEXT NOT NULL,
-                telefone VARCHAR(15),
-                email TEXT)`,
+                senha TEXT NOT NULL,
+                telefone VARCHAR(15) NOT NULL,
+                email TEXT NOT NULL)`,
             `CREATE TABLE IF NOT EXISTS organizacoes (
-                id STRING PRIMARY KEY,
+                id VARCHAR(50) PRIMARY KEY NOT NULL,
                 nome TEXT NOT NULL,
                 endereco TEXT NOT NULL,
                 telefone VARCHAR(15),
                 email TEXT)`,
             `CREATE TABLE IF NOT EXISTS descricoesPerdidos (
-                id STRING PRIMARY KEY,
+                id VARCHAR(50) PRIMARY KEY NOT NULL,
                 horarioPerdido VARCHAR(9) NOT NULL,
                 dataPerdido VARCHAR(11) NOT NULL,
-                horarioDataRequisicao VARCHAR(20) NOT NULL,
                 caracteristicasUnicas TEXT,
-                CONSTRAINT id_animal FOREIGN KEY(id) REFERENCES cachorros(id),
-                CONSTRAINT id_requisitante FOREIGN KEY(id) REFERENCES usuarios(id))`,
+                idAnimal VARCHAR(30) NOT NULL,
+                idRequisitante VARCHAR(30) NOT NULL,
+                criadoEm VARCHAR(20) NOT NULL)`,
             `CREATE TABLE IF NOT EXISTS animaisEncontrados (
-                id STRING PRIMARY KEY,
+                id VARCHAR(50) PRIMARY KEY NOT NULL,
                 horarioEncontrado VARCHAR(9) NOT NULL,
                 dataEncontrado VARCHAR(11) NOT NULL,
                 caracteristicasUnicas TEXT,
-                CONSTRAINT id_animal FOREIGN KEY(id) REFERENCES cachorros(id),
-                CONSTRAINT id_organizacao FOREIGN KEY(id) REFERENCES oganizacoes(id))`
+                idAnimal VARCHAR(30) NOT NULL,
+                idOrganizacao VARCHAR(30) NOT NULL)`
         ]
         querys.forEach(val => {
             this.db.run(val, (err)=>{
@@ -96,13 +97,13 @@ class databaseController{
             db.validateSync(values);
         }catch(err){
             console.log(err);
-            return err;
+            return err.errors;
         }
-        return err
     }
 
     addData(database, values){
-        let err = this.modelValidation(database);
+        // console.log(Object.keys(values));
+        let err = this.modelValidation(database, values);
         if(err){
             return err;
         }else{
@@ -140,7 +141,7 @@ class databaseController{
         
         //console.log(query);
         return new Promise((resolve, reject)=>{
-            this.db.each(query, (err, data) => {
+            this.db.all(query, (err, data) => {
                 if (err) {
                     console.log(err);
                     reject(err);
@@ -190,6 +191,41 @@ class databaseController{
             },
             (err)=>console.log(`Erro : ${err}`)
         )
+    }
+
+    readFullAnimalData(database, values = {}){
+        let str = "";
+        let query = `SELECT *
+            FROM ${database}
+            INNER JOIN cachorros ON ${database}.idAnimal = cachorros.id`
+        switch(database){
+            case 'descricoesPerdidos':
+                query += ` INNER JOIN organizacoes ON ${database}.idRequisitante = usuarios.id`;
+                break;
+            case 'animaisEncontrados':
+                query += ` INNER JOIN organizacoes ON ${database}.idOrganizacao = organizacoes.id`;
+                break;
+        }
+        if(Object.keys(values) != 0){
+            Object.keys(values).forEach((key, i)=>{
+                str += `${key} = "${values[key]}"`
+                if(i + 1 < Object.keys(values).length){
+                    str += " AND "
+                }
+            })
+            query += " WHERE " + str;
+        }
+        
+        return new Promise((resolve, reject)=>{
+            this.db.all(query, (err, data) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            })
+        })
     }
 }
 
