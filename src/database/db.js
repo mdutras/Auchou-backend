@@ -53,7 +53,8 @@ class databaseController{
                 dataEncontrado VARCHAR(11) NOT NULL,
                 caracteristicasUnicas TEXT,
                 idAnimal VARCHAR(30) NOT NULL,
-                idOrganizacao VARCHAR(30) NOT NULL)`
+                idOrganizacao VARCHAR(30) NOT NULL,
+				paraAdocao VARCHAR(2) NOT NULL)`
         ]
         querys.forEach(val => {
             this.db.run(val, (err)=>{

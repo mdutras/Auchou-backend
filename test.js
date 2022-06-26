@@ -1,24 +1,13 @@
-// const express = require('express');
-// const dbController = require('./src/database/db');
-// const crypto = require('crypto');
+const fs = require('fs');
 
-// const db = new dbController();
+let arr = Object.values(fs.readFileSync( __dirname + '/images.jpeg'));
 
-// const app = express();
+console.log(Object.values(arr));
+//arr = Object.values(arr);
 
-// db.readFullAnimalData('animaisEncontrados').then(
-//     (data)=>console.log(data),
-//     (err)=>console.log(err)
-// )
+let buf = Buffer.from(arr);
+console.log(buf);
 
-let obj = {
-    nome : "Genivaldo",
-    idade : 22
-}
+let err = fs.writeFileSync(__dirname + '/images2.jpeg', buf);
 
-let {nome, idade} = obj;
-
-let obj1 = {nome};
-let obj2 = {idade};
-
-console.log(obj1, obj2)
+console.log(err);
