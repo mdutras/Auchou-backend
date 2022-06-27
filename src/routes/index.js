@@ -7,8 +7,15 @@ const db = new dbController();
 
 const router = express.Router();
 
+router.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
+    app.use(cors());
+    next();
+});
+
 router.get('/adote', (req, res) => {
-	db.readData('animaisEncontrados', {paraAdocao : 'S'}).then(
+	db.readFullAnimalData('animaisEncontrados', {paraAdocao : 'S'}).then(
         (data) => res.json(data).send(),
         (err) => console.log(err)
     )
