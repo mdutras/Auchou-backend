@@ -5,13 +5,14 @@ const router = require('./routes/index');
 const cors = require('cors');
 
 const app = express();
-app.use(express.static(__dirname + '/public'))__dirname + '/public/img/img' + id + '.png';
+
+app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended : true }))
 app.use(morgan('dev'));
 app.use(helmet());
-app.use(router);
-app.use(cors())
+app.use('/',router);
+app.use(cors());
 
 app.get('/', (req, res)=>{
     res.type('text/plain').status(200);
@@ -19,7 +20,7 @@ app.get('/', (req, res)=>{
 })
 
 
-app.listen(3300, ()=> console.log('Servdor aberto na porta 3300...'));
+app.listen(3300, () => console.log('Servdor aberto na porta 3300...'));
 
 
 

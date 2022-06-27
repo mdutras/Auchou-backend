@@ -1,13 +1,13 @@
-const fs = require('fs');
+const crypto = require('crypto');
+const dbController = require('./src/database/db');
 
-let arr = Object.values(fs.readFileSync( __dirname + '/images.jpeg'));
+const db = new dbController();
 
-console.log(Object.values(arr));
-//arr = Object.values(arr);
-
-let buf = Buffer.from(arr);
-console.log(buf);
-
-let err = fs.writeFileSync(__dirname + '/images2.jpeg', buf);
-
-console.log(err);
+db.addData('animaisEncontrados', {
+	id: crypto.randomUUID(),
+	idOrganizacao :  crypto.randomUUID(),
+	idAnimal: crypto.randomUUID(),
+	dataEncontrado:"12/05/2010",
+	horarioEncontrado:"12:59",
+	paraAdocao:"S"
+})

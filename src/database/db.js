@@ -31,14 +31,12 @@ class databaseController{
                 id VARCHAR(50) PRIMARY KEY NOT NULL,
                 nome TEXT NOT NULL,
                 senha TEXT NOT NULL,
-                telefone VARCHAR(15) NOT NULL,
-                email TEXT NOT NULL)`,
+                telefone VARCHAR(15) NOT NULL)`,
             `CREATE TABLE IF NOT EXISTS organizacoes (
                 id VARCHAR(50) PRIMARY KEY NOT NULL,
                 nome TEXT NOT NULL,
                 endereco TEXT NOT NULL,
-                telefone VARCHAR(15),
-                email TEXT)`,
+                telefone VARCHAR(15))`,
             `CREATE TABLE IF NOT EXISTS descricoesPerdidos (
                 id VARCHAR(50) PRIMARY KEY NOT NULL,
                 horarioPerdido VARCHAR(9) NOT NULL,
@@ -103,7 +101,6 @@ class databaseController{
     }
 
     addData(database, values){
-        // console.log(Object.keys(values));
         let err = this.modelValidation(database, values);
         if(err){
             return err;
@@ -140,7 +137,6 @@ class databaseController{
             query = `SELECT * FROM ${database} WHERE ${str};`;
         }
         
-        //console.log(query);
         return new Promise((resolve, reject)=>{
             this.db.all(query, (err, data) => {
                 if (err) {
